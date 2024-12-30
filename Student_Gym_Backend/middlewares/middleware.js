@@ -7,7 +7,6 @@ import { encryptionKey } from "../controllers/controllers.js";
 
 
 
-// down here i have replaced res with _ because we are not using it and some code migth have this syntax
 export const isUser = asyncHandler(async (req, _, next) => {
     try {
         console.log("req.cookies",req.cookies)
@@ -16,7 +15,6 @@ export const isUser = asyncHandler(async (req, _, next) => {
         if(!token) {
             throw new ApiError(401,"Unauthorized token")
         }
-        // maybe put await in jwt
         console.log("12")
         const decodedToken = jwt.verify(token,"gdfasKGWEHVHJVhrvfargwnebrvgblHVHJVHSJ")
         console.log("decodedToken",decodedToken)
