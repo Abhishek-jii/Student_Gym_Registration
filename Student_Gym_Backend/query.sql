@@ -11,7 +11,6 @@ CREATE TABLE Students (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create the Batches table
 CREATE TABLE Batches (
     id SERIAL PRIMARY KEY,
     batch_name VARCHAR(100) NOT NULL,
@@ -20,7 +19,6 @@ CREATE TABLE Batches (
 
 
 
--- Create the Payments table
 CREATE TABLE Payments (
     id SERIAL PRIMARY KEY,
 	payment_id BYTEA NOT NULL,
@@ -30,7 +28,6 @@ CREATE TABLE Payments (
     FOREIGN KEY (student_id) REFERENCES Students(USN)
 );
 
--- Create the Registrations table
 CREATE TABLE Registrations (
     id SERIAL PRIMARY KEY,
     student_id VARCHAR(10) NOT NULL,
