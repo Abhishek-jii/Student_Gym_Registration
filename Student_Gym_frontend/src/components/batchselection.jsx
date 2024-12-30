@@ -28,7 +28,7 @@ const BatchSelection = () => {
             );
             console.log(order)
          const options = {
-              key: "<seceret_key>", // Enter the Key ID generated from the Dashboard of RazorPay API Keys
+              key: "<secret_key>", // Enter the Key ID generated from the Dashboard of RazorPay API Keys
               amount: order.amount, 
               currency: "INR",
               name: "Gym Registration", 
