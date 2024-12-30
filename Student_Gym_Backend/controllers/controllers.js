@@ -6,8 +6,8 @@ import jwt from "jsonwebtoken";
 
 
 const instance = new Razorpay({
-  key_id: "rzp_test_wz5xalOCmIbO44"  ,
-  key_secret: "uoyzs2FftVebQd4SN7OfDIJp",
+  key_id: "<razor pay key_id>"  ,
+  key_secret: "<razor pay key_secret>",
 });
 
 export const encryptionKey = "process.env.ENCRYPTION_KEY";
