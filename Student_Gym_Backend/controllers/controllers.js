@@ -6,8 +6,8 @@ import jwt from "jsonwebtoken";
 
 
 const instance = new Razorpay({
-  key_id: "<razor pay key_id>"  ,
-  key_secret: "<razor pay key_secret>",
+  key_id: "rzp_test_wz5xalOCmIbO44"  ,
+  key_secret: "uoyzs2FftVebQd4SN7OfDIJp",
 });
 
 export const encryptionKey = "process.env.ENCRYPTION_KEY";
@@ -173,27 +173,31 @@ export const createBatch = asyncHandler( async (req,res) => {
 
 
 export const createRegistration = asyncHandler( async(req,res) => {console.log('registration')
-    const {student_id, batch_id, month} = req.body
+    const { batch_id, month} = req.body
 
+    const student_id = req.user 
+
+    console.log("register")
     if([batch_id, month, student_id].some((field)=> {
         field.trim() ==""
     })){
+        console.log("err")
         throw new Error("Enter all deatils")
     }
 
-
+    console.log("register",student_id, batch_id, month)
     
 
-    const query1 = "Insert into Registrations (student_id, batch_id, month, payment_status) values($1,$2,$3,true) "
+    const query1 = "Insert into Registrations (student_id, batch_id, month) values($1,$2,$3) "
     try{
         const registration = await db.query(query1,[student_id, batch_id, month])
-        console.log(registration)
+        console.log("registration")
         return res.status(200).json(registration.rows)
     }catch(err){
-        console.log(err)
+        console.log("err",err)
         throw new Error("error creating batch")
 
-    }   
+    }
     
 })
 
@@ -201,14 +205,16 @@ export const createPayment = asyncHandler( async(req,res) => {
     console.log('payment')
     const {payment_id, amount, batch_id, month} = req.body
 
+    console.log(req.body)
     
    
 
     const query1 = "Insert into payments (payment_id,student_id, amount) values($1,$2,$3) "
     try{
-        console.log(req.user)
         const payment = await db.query(query1,[payment_id,req.user, amount])
-        const response = await createRegistration(req.user, batch_id,month,true)
+        
+        console.log("success")
+        
         return res.status(200).json({message:"success"})
 
     }catch(err){
