@@ -9,6 +9,9 @@ const BatchSelection = () => {
     const [month ,setMonth] = useState('');
       const navigate = useNavigate();
     const { isAuth, setToken} = UserData()
+    const [minDate, setMinDate] = useState('');
+
+  
     useEffect(() => {
         const fetchBatches = async () => {
             const response = await axios.get('/api/getBatches');
@@ -16,6 +19,9 @@ const BatchSelection = () => {
             console.log(batches)
         };
         fetchBatches();
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        setMinDate(formattedDate);
     }, []);
 
     const handleSubmit = async (e) => {
@@ -24,27 +30,51 @@ const BatchSelection = () => {
         const {
               data: { order },
             } = await axios.post(
-              `/api/checkout/`,
+              /api/checkout/,
             );
             console.log(order)
          const options = {
-              key: "<secret_key>", // Enter the Key ID generated from the Dashboard of RazorPay API Keys
-              amount: order.amount, 
+              key: "rzp_test_wz5xalOCmIbO44", // Enter the Key ID generated from the Dashboard
+              amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
               currency: "INR",
-              name: "Gym Registration", 
+              name: "Gym", //your business name
               description: "work with us",
-              order_id: order.id, 
+              order_id: order.id, //This is a sample Order ID. Pass the id obtained in the response of Step 1
         
               handler: async function (response) {
                 const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
                   response;
-                const payment_id = `${razorpay_order_id}|${razorpay_payment_id}|${razorpay_signature}`
+                const payment_id = ${razorpay_order_id}|${razorpay_payment_id}|${razorpay_signature}
                 try {
                   setToken(payment_id)
         
                   
                 } catch (error) {
                   toast.error(error.response.data.message);
+                }
+                try {
+                  const { data } = await axios.post(
+                    '/api/createPayment/',
+                    {
+                        amount:1000,
+                        batch_id:selectedBatch
+                      ,payment_id
+                    },
+                  );
+                   console.log("successful payment creation")
+                    try {
+                      const { data } = await axios.post(
+                        '/api/createRegistration',
+                        {
+                          batch_id:selectedBatch,
+                          month:month
+                        }
+                      )
+                    } catch (error) {
+                      
+                    }
+                } catch (err) {
+                    alert('Error during batch selection');
                 }
                 alert("registered for the batch")
               },
@@ -57,25 +87,13 @@ const BatchSelection = () => {
               console.error("Payment Failed:", response.error);
             });
             razorpay.open();
-        try {
-          const { data } = await axios.post(
-            'http://localhost:3000/api/createPayment/',
-            {
-                amount:1000,
-                batch_id:selectedBatch,
-                month: '2024-12-30'
-              ,payment_id
-            },
-          );
-           
-            alert('Batch selected successfully');
-        } catch (err) {
-            alert('Error during batch selection');
-        }
+        
     };
 
     return (
         <form onSubmit={handleSubmit}>
+            <h2>Select a Date</h2>
+            <input type="date" name="month" id="month" onChange={(e) => setMonth(e.target.value)} required />
             <h2>Select a Batch</h2>
             <select onChange={(e) => setSelectedBatch(e.target.value)} required>
                 <option value="">-- Select a Batch --</option>
