@@ -30,7 +30,7 @@ const BatchSelection = () => {
         const {
               data: { order },
             } = await axios.post(
-              /api/checkout/,
+              `/api/checkout/`,
             );
             console.log(order)
          const options = {
